@@ -1,0 +1,27 @@
+pipeline {
+    agent any 
+    stages {
+        stage('Build') { 
+            steps {
+                git 'git@github.com:Mahesh8143/MyFirstProject.gitt'
+                bat 'mvn -B compile'
+            }
+        }
+        stage('Test') { 
+            steps {
+                bat 'mvn test'
+            }
+            post{
+                always{
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('Package') { 
+            steps {
+                bat 'mvn package'
+                archiveArtifacts 'target/*.jar'
+            }
+        }
+    }
+}
